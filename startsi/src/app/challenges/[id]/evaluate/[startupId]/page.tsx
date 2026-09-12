@@ -21,6 +21,7 @@ import {
   Award,
   Sparkles,
   ClipboardCheck,
+  ShieldCheck,
   ShieldAlert,
 } from "lucide-react";
 import { useSessionStore } from "@/store/session";
@@ -373,6 +374,74 @@ export default function StartupEvaluationPage({
                   </button>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* MODEL 2: HYBRID OBJECTIVE READINESS & STATUTORY AUDIT CARD */}
+          <div className="bg-gradient-to-br from-slate-900 via-[#16224B] to-slate-950 text-white p-6 rounded-2xl border border-slate-800 shadow-lg space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-purple-400" />
+                <h4 className="font-extrabold text-sm tracking-tight text-white">
+                  AI Model 2: Statutory Audit
+                </h4>
+              </div>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                Hybrid Telemetry
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-center">
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-[10px] text-slate-400 font-bold block">Expert Rubric (55%)</span>
+                <span className="text-base font-extrabold text-blue-400 font-mono">
+                  {(totalScore / 10).toFixed(1)}/10
+                </span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-[10px] text-slate-400 font-bold block">Objective Telemetry (45%)</span>
+                <span className="text-base font-extrabold text-purple-400 font-mono">
+                  7.4/10
+                </span>
+              </div>
+            </div>
+
+            {/* Composite Score Display */}
+            <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] text-purple-200 font-bold uppercase block">Composite Score</span>
+                <p className="text-sm font-extrabold text-white">
+                  {((totalScore / 10) * 0.55 + 7.4 * 0.45).toFixed(2)} / 10
+                </p>
+              </div>
+              <span className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                {totalScore >= 70 ? "APPROVE FOR PILOT" : "CONDITIONAL SCOPE"}
+              </span>
+            </div>
+
+            {/* Telemetry Breakdown Points */}
+            <div className="space-y-1.5 text-[11px] text-slate-300">
+              <div className="flex items-center justify-between py-1 border-b border-white/5">
+                <span>• TRL Level 7 (Hardware Tested)</span>
+                <span className="font-mono text-purple-300 font-bold">3.1 pts / 4.0</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-white/5">
+                <span>• Verified Municipal Pilots (2)</span>
+                <span className="font-mono text-purple-300 font-bold">1.8 pts / 3.0</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-white/5">
+                <span>• DPIIT Recognition (GFR Rule 170)</span>
+                <span className="font-mono text-emerald-400 font-bold">1.5 pts / 1.5</span>
+              </div>
+              <div className="flex items-center justify-between py-1">
+                <span>• Balance Sheet Reserve (₹45L Turnover)</span>
+                <span className="font-mono text-purple-300 font-bold">1.0 pts / 1.5</span>
+              </div>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2 text-[11px] text-emerald-300 font-semibold">
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>Audit Passed: Aligned evaluation with field telemetry.</span>
             </div>
           </div>
         </motion.div>

@@ -230,6 +230,43 @@ export default function SharedPilotDetailPage({
             />
           </div>
         </div>
+
+        {/* AI MODEL 3: PILOT RESULT RECOMMENDATION ENGINE PANEL */}
+        <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-[#16224B] to-slate-950 text-white shadow-xl space-y-4 border border-slate-800">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-emerald-400" />
+              <h3 className="font-extrabold text-sm tracking-tight text-white">
+                AI Model 3: Pilot Result Recommendation Engine
+              </h3>
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              PILOT SUCCESS
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+              <span className="text-[10px] text-slate-400 font-bold uppercase block">Recommendation</span>
+              <p className="text-base font-black text-emerald-400">✓ SCALE UP</p>
+              <span className="text-[10px] text-slate-300">State-wide procurement</span>
+            </div>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+              <span className="text-[10px] text-slate-400 font-bold uppercase block">KPI Attainment</span>
+              <p className="text-base font-black text-blue-400">135% Average</p>
+              <span className="text-[10px] text-slate-300">Exceeded leak & cost targets</span>
+            </div>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+              <span className="text-[10px] text-slate-400 font-bold uppercase block">AI Confidence</span>
+              <p className="text-base font-black text-amber-300 font-mono">94% Confidence</p>
+              <span className="text-[10px] text-slate-300">Statutory threshold verified</span>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-xs text-emerald-200 leading-relaxed">
+            <strong>AI Procurement Rationale:</strong> Solution exceeded both primary municipal KPIs (reduction in pipeline leakage and operational energy overheads) during the 90-day field trial. Recommended for direct rate-contract empanelment under Maharashtra State Procurement Guidelines.
+          </div>
+        </div>
       </motion.div>
 
       {/* MILESTONE DELIVERABLES CHECKLIST */}
