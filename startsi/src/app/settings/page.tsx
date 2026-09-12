@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -20,7 +20,15 @@ import { fadeInUp, staggerContainer } from "@/lib/motion";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { currentUser, logout } = useSessionStore();
+  const { currentUser, logout, hasHydrated } = useSessionStore();
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+  }, [currentUser, hasHydrated, router]);
 
   const [notifications, setNotifications] = useState({
     recommendations: true,

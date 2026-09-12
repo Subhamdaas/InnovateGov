@@ -7,6 +7,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { useThemeStore } from "@/store/theme";
 import { useSessionStore } from "@/store/session";
+import { AiAssistantWidget } from "@/components/ai/AiAssistantWidget";
 import { Loader2 } from "lucide-react";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -58,10 +59,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return (
       <main
         className={`w-full min-h-screen ${
-          theme === "dark" ? "dark bg-[#0B1120] text-slate-100" : "bg-slate-50 text-slate-900"
+          theme === "dark" ? "dark bg-[#141210] text-slate-100" : "bg-[#FBF9F4] text-slate-900"
         }`}
       >
         <PageTransition>{children}</PageTransition>
+        <AiAssistantWidget />
       </main>
     );
   }
@@ -69,9 +71,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // If waiting for hydration or unauthenticated on a protected page, show loading gate
   if (!hasHydrated || isValidating || !currentUser) {
     return (
-      <div className="h-screen w-full flex flex-col items-center justify-center bg-[#F5F6FA] dark:bg-[#0B1120]">
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-[#FBF9F4] dark:bg-[#141210]">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 text-[#2F5FEA] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#8C634B] animate-spin" />
           <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
             Verifying secure session...
           </p>
@@ -84,7 +86,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={`flex flex-row h-screen w-full overflow-hidden antialiased ${
-        theme === "dark" ? "dark bg-[#0B1120] text-slate-100" : "bg-[#F5F6FA] text-slate-900"
+        theme === "dark" ? "dark bg-[#141210] text-slate-100" : "bg-[#FBF9F4] text-slate-900"
       }`}
     >
       <Sidebar
@@ -97,6 +99,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <PageTransition>{children}</PageTransition>
         </main>
       </div>
+      <AiAssistantWidget />
     </div>
   );
 }

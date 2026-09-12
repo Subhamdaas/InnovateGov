@@ -1,9 +1,63 @@
-export type Role = "GOVERNMENT" | "STARTUP" | "EVALUATOR";
+export type Role = "GOVERNMENT" | "STARTUP" | "EVALUATOR" | "OPS_FACILITATOR";
 export type ChallengeStatus = "DRAFT" | "ACTIVE" | "CLOSED";
 export type EvalStatus = "DRAFT" | "SUBMITTED";
 export type PilotStatus = "ACTIVE" | "COMPLETED";
 export type MilestoneStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED";
 export type ApplicationStatus = "UNDER_REVIEW" | "EVALUATED" | "SELECTED";
+
+export type FundingAppStatus =
+  | "PENDING"
+  | "MATCHED"
+  | "VERIFYING"
+  | "VERIFIED"
+  | "REJECTED";
+export type VerificationVerdict = "PENDING" | "APPROVED" | "REJECTED";
+export type FacilitationStage =
+  | "VERIFIED"
+  | "OUTREACH"
+  | "NEGOTIATING"
+  | "FUNDED"
+  | "CLOSED_NOT_FUNDED";
+
+export interface FundingApplication {
+  id: string;
+  startupId: string;
+  capabilitySummary: string;
+  fundingAskAmount: number;
+  fundingPurpose: string;
+  documents: { name: string; type: string }[];
+  status: FundingAppStatus;
+  submittedAt: string;
+}
+
+export interface WishlistMatch {
+  id: string;
+  challengeId: string;
+  fundingApplicationId: string;
+  matchScore: number;
+  matchReason: string;
+  rank: number; // 1 or 2 = auto-shortlisted
+}
+
+export interface Verification {
+  id: string;
+  wishlistMatchId: string;
+  identityStatus: VerificationVerdict;
+  technicalStatus: VerificationVerdict;
+  identityReviewedBy?: string;
+  technicalReviewedBy?: string;
+  identityDocs: { name: string; approved: boolean }[];
+}
+
+export interface FacilitationRecord {
+  id: string;
+  verificationId: string;
+  stage: FacilitationStage;
+  governmentContact?: string;
+  fundingAmountSecured?: number;
+  notes: string;
+  updatedAt: string;
+}
 
 export interface Department {
   id: string;
@@ -122,4 +176,3 @@ export interface GovtScheme {
   category: "NATIONAL" | "STATE";
   state?: string;
 }
-

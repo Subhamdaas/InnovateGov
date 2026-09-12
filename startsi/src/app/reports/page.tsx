@@ -91,9 +91,22 @@ const allocationData = [
   { name: "Health Dept", value: 10, highlight: false },
 ];
 
+import { useRouter } from "next/navigation";
+import { useSessionStore } from "@/store/session";
+
 export default function ReportsPage() {
+  const router = useRouter();
+  const { currentUser, hasHydrated } = useSessionStore();
   const [mounted, setMounted] = useState(false);
   const [timeframe, setTimeframe] = useState<TimeframeOption>("Quarter");
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+  }, [currentUser, hasHydrated, router]);
 
   useEffect(() => {
     setMounted(true);

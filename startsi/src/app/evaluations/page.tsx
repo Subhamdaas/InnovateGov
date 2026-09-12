@@ -19,15 +19,25 @@ import {
 import { getEvaluations } from "@/lib/api";
 import { Evaluation, EvalStatus } from "@/types";
 import { fadeInUp, staggerContainer, useCountUp } from "@/lib/motion";
+import { useSessionStore } from "@/store/session";
 
 type FilterTab = "ALL" | EvalStatus;
 
 export default function EvaluationsPage() {
   const router = useRouter();
+  const { currentUser, hasHydrated } = useSessionStore();
 
   const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<FilterTab>("ALL");
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+  }, [currentUser, hasHydrated, router]);
 
   useEffect(() => {
     async function loadData() {

@@ -40,7 +40,7 @@ const LAST_CHECKED_DATE = "September 11, 2026";
 
 export default function ForStartupsPage() {
   const router = useRouter();
-  const { currentUser } = useSessionStore();
+  const { currentUser, hasHydrated } = useSessionStore();
   const { theme, toggleTheme } = useThemeStore();
   const isDarkMode = theme === "dark";
 
@@ -53,6 +53,7 @@ export default function ForStartupsPage() {
   const avgDaysCount = useCountUp(14, 800);
 
   const handleCtaClick = () => {
+    if (!hasHydrated) return;
     if (currentUser?.role === "STARTUP") {
       router.push("/startup/dashboard");
     } else {

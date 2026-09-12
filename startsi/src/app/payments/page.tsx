@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   CreditCard,
@@ -15,8 +16,20 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { fadeInUp, staggerContainer, useCountUp } from "@/lib/motion";
+import { useSessionStore } from "@/store/session";
 
 export default function PaymentsPage() {
+  const router = useRouter();
+  const { currentUser, hasHydrated } = useSessionStore();
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+  }, [currentUser, hasHydrated, router]);
+
   const [payments, setPayments] = useState([
     {
       id: "pay-101",

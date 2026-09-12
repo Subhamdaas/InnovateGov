@@ -19,15 +19,25 @@ import {
 import { getAllPilots } from "@/lib/api";
 import { Pilot, PilotStatus } from "@/types";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
+import { useSessionStore } from "@/store/session";
 
 type FilterTab = "ALL" | PilotStatus;
 
 export default function PilotsPage() {
   const router = useRouter();
+  const { currentUser, hasHydrated } = useSessionStore();
 
   const [pilots, setPilots] = useState<Pilot[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<FilterTab>("ALL");
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+  }, [currentUser, hasHydrated, router]);
 
   useEffect(() => {
     async function loadData() {

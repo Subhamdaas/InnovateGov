@@ -20,13 +20,23 @@ import {
 import { getApplications } from "@/lib/api";
 import { Application, ApplicationStatus } from "@/types";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
+import { useSessionStore } from "@/store/session";
 
 type StatusTab = "ALL" | ApplicationStatus;
 
 export default function ApplicationsPage() {
   const router = useRouter();
+  const { currentUser, hasHydrated } = useSessionStore();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+  }, [currentUser, hasHydrated, router]);
 
   const [activeTab, setActiveTab] = useState<StatusTab>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");

@@ -12,12 +12,12 @@ import {
   BarChart3,
   Settings,
   ShieldCheck,
-  ChevronDown,
   Building2,
   Sparkles,
   X,
   Sun,
   Moon,
+  LogOut,
 } from "lucide-react";
 import { useSessionStore } from "@/store/session";
 import { useThemeStore } from "@/store/theme";
@@ -58,8 +58,14 @@ interface SidebarProps {
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { currentUser, switchRole } = useSessionStore();
+  const { currentUser, switchRole, logout } = useSessionStore();
   const { theme, toggleTheme } = useThemeStore();
+
+  const handleLogout = () => {
+    logout();
+    if (onMobileClose) onMobileClose();
+    router.push("/login");
+  };
 
   const handleRoleSwitch = (role: Role) => {
     switchRole(role);
@@ -83,7 +89,6 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const roles: { role: Role; label: string }[] = [
     { role: "GOVERNMENT", label: "Govt Officer" },
     { role: "STARTUP", label: "Startup" },
-    { role: "EVALUATOR", label: "Evaluator" },
   ];
 
   const content = (
@@ -196,7 +201,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           <ShieldCheck className="w-3 h-3 text-emerald-400" />
         </div>
 
-        <div className="grid grid-cols-3 gap-1 mb-3">
+        <div className="grid grid-cols-2 gap-1.5 mb-3">
           {roles.map((r) => (
             <button
               key={r.role}
@@ -229,7 +234,13 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
                 : "Evaluation Panel"}
             </p>
           </div>
-          <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+          <button
+            onClick={handleLogout}
+            title="Log Out"
+            className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-white/10 transition-colors shrink-0 flex items-center justify-center min-h-[36px] min-w-[36px]"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>

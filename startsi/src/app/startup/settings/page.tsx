@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Settings,
@@ -18,7 +19,16 @@ import { useSessionStore } from "@/store/session";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 
 export default function StartupSettingsPage() {
-  const { currentUser } = useSessionStore();
+  const router = useRouter();
+  const { currentUser, hasHydrated } = useSessionStore();
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+  }, [currentUser, hasHydrated, router]);
 
   // Notification Preferences Local State
   const [notifAppUpdates, setNotifAppUpdates] = useState(true);

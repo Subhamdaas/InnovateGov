@@ -1,47 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F5F6FA;
-  --foreground: #0F172A;
+  --background: #FBF9F4;
+  --foreground: #2B2521;
 
   --card: #FFFFFF;
-  --card-foreground: #0F172A;
+  --card-foreground: #2B2521;
 
-  --brand-navy: #16224B;
-  --brand-navy-hover: #1D2D63;
-  --brand-primary: #2F5FEA;
-  --brand-primary-hover: #234BCB;
-  --brand-primary-light: #EEF3FF;
+  --brand-navy: #362A22;
+  --brand-navy-hover: #261D17;
+  --brand-primary: #8C634B;
+  --brand-primary-hover: #724E38;
+  --brand-primary-light: #F4EFEA;
 
-  --status-success: #16A34A;
-  --status-success-bg: #DCFCE7;
+  --status-success: #2E7D52;
+  --status-success-bg: #EAF5EE;
 
-  --status-pending: #D97706;
-  --status-pending-bg: #FEF3C7;
+  --status-pending: #C27D2C;
+  --status-pending-bg: #FAF2E6;
 
-  --status-draft: #4B5563;
-  --status-draft-bg: #F3F4F6;
+  --status-draft: #6E655F;
+  --status-draft-bg: #F0EDE8;
 
-  --status-accent: #7C3AED;
-  --status-accent-bg: #F3E8FF;
+  --status-accent: #8C634B;
+  --status-accent-bg: #F4EFEA;
 
-  --status-danger: #DC2626;
-  --status-danger-bg: #FEE2E2;
+  --status-danger: #C84B4B;
+  --status-danger-bg: #FAF0F0;
 
-  --border: #E2E8F0;
-  --ring: #2F5FEA;
+  --border: #EFECE6;
+  --ring: #8C634B;
 }
 
 /* Comprehensive Dark Mode Variable & Component Overrides */
 .dark {
-  --background: #0B1120;
-  --foreground: #F8FAFC;
+  --background: #141210;
+  --foreground: #F5F2EC;
 
-  --card: #16224B;
-  --card-foreground: #F8FAFC;
+  --card: #201D1A;
+  --card-foreground: #F5F2EC;
 
-  --border: #1E293B;
-  --ring: #3B82F6;
+  --brand-navy: #1C1917;
+  --brand-navy-hover: #2A2522;
+  --brand-primary: #A87D61;
+  --brand-primary-hover: #C2967A;
+  --brand-primary-light: #2D2621;
+
+  --border: #332D28;
+  --ring: #A87D61;
 }
 
 @theme inline {
@@ -86,14 +92,14 @@ body {
 
 /* Global Dark Mode Class Targets for Cards, Containers, Tables, and Forms */
 .dark body {
-  background-color: #0B1120 !important;
-  color: #F8FAFC !important;
+  background-color: #141210 !important;
+  color: #F5F2EC !important;
 }
 
 .dark .bg-white {
-  background-color: #16224B !important;
-  color: #F8FAFC !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: #201D1A !important;
+  color: #F5F2EC !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark .bg-slate-50,
@@ -101,9 +107,9 @@ body {
 .dark .bg-slate-50\/70,
 .dark .bg-slate-100,
 .dark .bg-slate-100\/80 {
-  background-color: #0F172A !important;
-  color: #F1F5F9 !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: #1A1715 !important;
+  color: #F5F2EC !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
 }
 
 .dark .border-slate-100,
@@ -111,26 +117,26 @@ body {
 .dark .border-slate-200\/80,
 .dark .border-slate-200\/90,
 .dark .border-slate-200\/70 {
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark .text-slate-900,
 .dark .text-slate-800,
 .dark .text-slate-700 {
-  color: #F8FAFC !important;
+  color: #F5F2EC !important;
 }
 
 .dark .text-slate-600,
 .dark .text-slate-500 {
-  color: #94A3B8 !important;
+  color: #B8B0A6 !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]),
 .dark select,
 .dark textarea {
-  background-color: #0B1120 !important;
-  color: #F8FAFC !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  background-color: #141210 !important;
+  color: #F5F2EC !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .dark input::placeholder,

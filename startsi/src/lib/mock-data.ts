@@ -8,6 +8,10 @@ import {
   Pilot,
   Decision,
   GovtScheme,
+  FundingApplication,
+  WishlistMatch,
+  Verification,
+  FacilitationRecord,
 } from "@/types";
 
 export const MOCK_DEPARTMENTS: Department[] = [
@@ -37,6 +41,13 @@ export const MOCK_USERS: User[] = [
     email: "priya.sharma@evaluator.org",
     role: "EVALUATOR",
     departmentId: "dept-2",
+  },
+  {
+    id: "usr-4",
+    name: "Vikram Malhotra",
+    email: "ops@innovategov.in",
+    role: "OPS_FACILITATOR",
+    departmentId: "dept-1",
   },
 ];
 
@@ -563,3 +574,192 @@ export const MOCK_GOVT_SCHEMES: GovtScheme[] = [
   },
 ];
 
+export const MOCK_FUNDING_APPLICATIONS: FundingApplication[] = [
+  {
+    id: "fa-101",
+    startupId: "start-1",
+    capabilitySummary: "Acoustic sensor & AI/ML powered real-time water leakage detection network for urban distribution infrastructure.",
+    fundingAskAmount: 2500000,
+    fundingPurpose: "Commercial pilot deployment of 50 acoustic sensors across municipal water zones.",
+    documents: [
+      { name: "DPIIT_Certificate.pdf", type: "application/pdf" },
+      { name: "Technical_Architecture_Deck.pdf", type: "application/pdf" },
+      { name: "Financial_Audit_FY25.pdf", type: "application/pdf" },
+    ],
+    status: "VERIFIED",
+    submittedAt: "2026-08-16T10:00:00Z",
+  },
+  {
+    id: "fa-102",
+    startupId: "start-2",
+    capabilitySummary: "Smart IoT-enabled waste bin monitoring, dynamic collection route optimization, and automated segregation telemetry.",
+    fundingAskAmount: 3000000,
+    fundingPurpose: "Scaling smart bin sensors and fleet route optimization software for municipal waste management.",
+    documents: [
+      { name: "DPIIT_Certificate.pdf", type: "application/pdf" },
+      { name: "IoT_Sensor_Compliance.pdf", type: "application/pdf" },
+    ],
+    status: "VERIFYING",
+    submittedAt: "2026-08-21T14:30:00Z",
+  },
+  {
+    id: "fa-103",
+    startupId: "start-3",
+    capabilitySummary: "Thermal drone imaging & AI computer vision for real-time canal seepage and embankment fracture analysis.",
+    fundingAskAmount: 3500000,
+    fundingPurpose: "Deploying autonomous drone surveillance units for irrigation canal monitoring.",
+    documents: [
+      { name: "DGCA_Drone_Permit.pdf", type: "application/pdf" },
+      { name: "DPIIT_Certificate.pdf", type: "application/pdf" },
+    ],
+    status: "MATCHED",
+    submittedAt: "2026-08-25T11:15:00Z",
+  },
+  {
+    id: "fa-104",
+    startupId: "start-4",
+    capabilitySummary: "Solar-powered smart water quality monitoring buoys with real-time turbidity and pH telemetry.",
+    fundingAskAmount: 1800000,
+    fundingPurpose: "Manufacturing 20 solar sensor buoys for municipal reservoir testing.",
+    documents: [
+      { name: "Lab_Testing_Report.pdf", type: "application/pdf" },
+    ],
+    status: "MATCHED",
+    submittedAt: "2026-08-28T09:00:00Z",
+  },
+  {
+    id: "fa-105",
+    startupId: "start-5",
+    capabilitySummary: "AI thermal camera surveillance & automated toll lane clearance for emergency vehicles.",
+    fundingAskAmount: 4000000,
+    fundingPurpose: "Pilot hardware integration at 10 major city arterial corridors.",
+    documents: [
+      { name: "Hardware_Spec_Sheet.pdf", type: "application/pdf" },
+    ],
+    status: "PENDING",
+    submittedAt: "2026-09-02T16:00:00Z",
+  },
+  {
+    id: "fa-106",
+    startupId: "start-6",
+    capabilitySummary: "Adaptive learning platform and vocational job placement matching engine for youth employment drives.",
+    fundingAskAmount: 1500000,
+    fundingPurpose: "Curriculum localization and regional language portal deployment.",
+    documents: [
+      { name: "EdTech_Impact_Study.pdf", type: "application/pdf" },
+    ],
+    status: "PENDING",
+    submittedAt: "2026-09-05T12:00:00Z",
+  },
+];
+
+export const MOCK_WISHLIST_MATCHES: WishlistMatch[] = [
+  // Challenge 1: Water Leakage Detection System
+  {
+    id: "wm-101",
+    challengeId: "chal-1",
+    fundingApplicationId: "fa-101", // GreenTech (start-1)
+    matchScore: 94.5,
+    matchReason: "Acoustic sensor technology matches underground water pipe leakage criteria with 94% confidence.",
+    rank: 1, // Auto-shortlisted
+  },
+  {
+    id: "wm-102",
+    challengeId: "chal-1",
+    fundingApplicationId: "fa-103", // Drone Seepage (start-3)
+    matchScore: 88.2,
+    matchReason: "Thermal imaging drone capability complements pipe seepage detection with high precision.",
+    rank: 2, // Auto-shortlisted
+  },
+  {
+    id: "wm-103",
+    challengeId: "chal-1",
+    fundingApplicationId: "fa-104", // Solar Sensor (start-4)
+    matchScore: 76.4,
+    matchReason: "Water quality buoys provide supplementary pressure and turbidity telemetry.",
+    rank: 3,
+  },
+
+  // Challenge 2: Smart Waste Management
+  {
+    id: "wm-201",
+    challengeId: "chal-2",
+    fundingApplicationId: "fa-102", // EcoTrash Systems (start-2)
+    matchScore: 92.8,
+    matchReason: "Smart bin IoT sensors & fleet route optimization directly resolve municipal collection delays.",
+    rank: 1, // Auto-shortlisted
+  },
+  {
+    id: "wm-202",
+    challengeId: "chal-2",
+    fundingApplicationId: "fa-105", // Traffic AI (start-5)
+    matchScore: 84.0,
+    matchReason: "Corridor traffic telemetry enables priority routing for municipal waste trucks.",
+    rank: 2, // Auto-shortlisted
+  },
+  {
+    id: "wm-203",
+    challengeId: "chal-2",
+    fundingApplicationId: "fa-106", // SkillGov AI (start-6)
+    matchScore: 65.0,
+    matchReason: "Vocational training module for sanitation workforce management.",
+    rank: 3,
+  },
+
+  // Challenge 3: AI Based Crop Disease Prediction
+  {
+    id: "wm-301",
+    challengeId: "chal-3",
+    fundingApplicationId: "fa-103", // Drone Seepage (start-3)
+    matchScore: 89.5,
+    matchReason: "Multispectral aerial drone imagery ideal for early crop pest & disease spot detection.",
+    rank: 1, // Auto-shortlisted
+  },
+  {
+    id: "wm-302",
+    challengeId: "chal-3",
+    fundingApplicationId: "fa-101", // GreenTech (start-1)
+    matchScore: 82.1,
+    matchReason: "Soil moisture & acoustic root sensor data assists disease vulnerability mapping.",
+    rank: 2, // Auto-shortlisted
+  },
+];
+
+export const MOCK_VERIFICATIONS: Verification[] = [
+  {
+    id: "ver-101",
+    wishlistMatchId: "wm-101", // GreenTech on Chal-1
+    identityStatus: "APPROVED",
+    technicalStatus: "APPROVED",
+    identityReviewedBy: "usr-4",
+    technicalReviewedBy: "usr-3",
+    identityDocs: [
+      { name: "DPIIT Recognition Certificate", approved: true },
+      { name: "Certificate of Incorporation", approved: true },
+      { name: "PAN & GST Compliance", approved: true },
+    ],
+  },
+  {
+    id: "ver-102",
+    wishlistMatchId: "wm-201", // EcoTrash on Chal-2
+    identityStatus: "PENDING",
+    technicalStatus: "APPROVED",
+    technicalReviewedBy: "usr-4",
+    identityDocs: [
+      { name: "DPIIT Recognition Certificate", approved: true },
+      { name: "Director KYC Documents", approved: false },
+    ],
+  },
+];
+
+export const MOCK_FACILITATION_RECORDS: FacilitationRecord[] = [
+  {
+    id: "fac-101",
+    verificationId: "ver-101",
+    stage: "NEGOTIATING",
+    governmentContact: "Amit Sharma (Public Works Department)",
+    fundingAmountSecured: 2500000,
+    notes: "Pilot terms drafted for 50 sensor deployment across 5 municipal water zones. MoA review in progress with Chief Engineer.",
+    updatedAt: "2026-09-10T14:30:00Z",
+  },
+];
