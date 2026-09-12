@@ -1,0 +1,5 @@
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common'; import { IsIn, IsOptional, IsString } from 'class-validator'; import { PilotsService } from './pilots.service';
+class CreatePilotDto { @IsString() challengeId!:string; @IsString() startupId!:string; @IsOptional() @IsString() applicationId?:string; }
+class MilestoneDto { @IsIn(['PENDING','IN_PROGRESS','COMPLETED']) status!:string; }
+class DecisionDto { @IsString() outcome!:string; @IsString() recommendedBy!:string; }
+@Controller('pilots') export class PilotsController { constructor(private s:PilotsService){} @Get() list(@Query('startupId') startupId?:string){return startupId?this.s.my(startupId):this.s.list();} @Get(':id') get(@Param('id') id:string){return this.s.get(id);} @Post() create(@Body() dto:CreatePilotDto){return this.s.create(dto.challengeId,dto.startupId,dto.applicationId);} @Patch('milestones/:id') milestone(@Param('id') id:string,@Body() dto:MilestoneDto){return this.s.updateMilestone(id,dto.status);} @Post(':id/decision') decision(@Param('id') id:string,@Body() dto:DecisionDto){return this.s.decision(id,dto.outcome,dto.recommendedBy);} }

@@ -1,0 +1,2 @@
+import { Injectable, NotFoundException } from '@nestjs/common'; import { PrismaService } from '../prisma/prisma.service';
+@Injectable() export class StartupsService { constructor(private prisma:PrismaService){} list(){return this.prisma.startup.findMany({orderBy:{name:'asc'}});} async get(id:string){const s=await this.prisma.startup.findUnique({where:{id}});if(!s)throw new NotFoundException('Startup not found');return s;} compare(ids:string[]){return this.prisma.startup.findMany({where:{id:{in:ids}}});} }

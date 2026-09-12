@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  GOVERNMENT
+  STARTUP
+  EVALUATOR
+}
+
+enum ChallengeStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}
+
+enum EvalStatus {
+  DRAFT
+  SUBMITTED
+}
+
+enum PilotStatus {
+  ACTIVE
+  COMPLETED
+}
+
+enum MilestoneStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ApplicationStatus {
+  UNDER_REVIEW
+  EVALUATED
+  SELECTED
+}
+
+model Department {
+  id         String      @id
+  name       String
+  users      User[]
+  challenges Challenge[]
+  createdAt  DateTime    @default(now())
+}
+
+model User {
+  id           String       @id
+  name         String
+  email        String       @unique
+  password     String?
+  role         Role
+  departmentId String?
+  startupId    String?
+  department   Department?  @relation(fields: [departmentId], references: [id])
+  startup      Startup?     @relation(fields: [startupId], references: [id])
+  challenges   Challenge[]  @relation("ChallengeCreator")
+  evaluations  Evaluation[]
+  decisions    Decision[]
+  createdAt    DateTime     @default(now())
+}
+
+model Startup {
+  id                String           @id
+  name              String
+  sectorTags        String[]
+  capabilitySummary String
+  foundedYear       Int?
+  teamSize          Int?
+  location          String?
+  users             User[]
+  applications      Application[]
+  recommendations   Recommendation[]
+  evaluations       Evaluation[]
+  pilots            Pilot[]
+  createdAt         DateTime         @default(now())
+}
+
+model Challenge {
+  id               String           @id @default(cuid())
+  departmentId     String
+  title            String
+  problemStatement String
+  expectedOutcome  String
+  status           ChallengeStatus
+  createdById      String
+  department       Department       @relation(fields: [departmentId], references: [id])
+  createdBy        User             @relation("ChallengeCreator", fields: [createdById], references: [id])
+  applications     Application[]
+  recommendations  Recommendation[]
+  evaluations      Evaluation[]
+  pilots           Pilot[]
+  createdAt        DateTime         @default(now())
+}
+
+model Recommendation {
+  id           String        @id
+  challengeId  String
+  startupId    String
+  matchScore   Float
+  matchReason  String
+  challenge    Challenge     @relation(fields: [challengeId], references: [id])
+  startup      Startup       @relation(fields: [startupId], references: [id])
+  applications Application[]
+  createdAt    DateTime      @default(now())
+
+  @@unique([challengeId, startupId])
+}
+
+model Application {
+  id               String          @id
+  shortId          String          @unique
+  challengeId      String
+  startupId        String
+  recommendationId String?
+  submittedAt      DateTime
+  challenge        Challenge       @relation(fields: [challengeId], references: [id])
+  startup          Startup         @relation(fields: [startupId], references: [id])
+  recommendation   Recommendation? @relation(fields: [recommendationId], references: [id])
+  pilot            Pilot?
+}
+
+model Evaluation {
+  id          String     @id
+  challengeId String
+  startupId   String
+  evaluatorId String
+  scores      Json
+  totalScore  Float
+  comment     String?
+  status      EvalStatus
+  challenge   Challenge  @relation(fields: [challengeId], references: [id])
+  startup     Startup    @relation(fields: [startupId], references: [id])
+  evaluator   User       @relation(fields: [evaluatorId], references: [id])
+
+  @@unique([challengeId, startupId])
+}
+
+model Pilot {
+  id            String       @id
+  challengeId   String
+  startupId     String
+  status        PilotStatus
+  startDate     DateTime
+  endDate       DateTime?
+  baselineValue Float?
+  targetValue   Float?
+  actualValue   Float?
+  challenge     Challenge    @relation(fields: [challengeId], references: [id])
+  startup       Startup      @relation(fields: [startupId], references: [id])
+  milestones    Milestone[]
+  decision      Decision?
+  application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId String?      @unique
+}
+
+model Milestone {
+  id          String          @id
+  pilotId     String
+  title       String
+  amount      Float
+  status      MilestoneStatus
+  completedAt DateTime?
+  pilot       Pilot           @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+}
+
+model Decision {
+  id            String          @id
+  pilotId       String          @unique
+  outcome       String
+  recommendedBy String
+  recommendedAt DateTime
+  pilot         Pilot           @relation(fields: [pilotId], references: [id], onDelete: Cascade)
+  recommender   User            @relation(fields: [recommendedBy], references: [id])
+}

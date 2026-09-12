@@ -1,0 +1,2 @@
+import { Controller, Get, Param, Query } from '@nestjs/common'; import { StartupsService } from './startups.service';
+@Controller('startups') export class StartupsController { constructor(private service:StartupsService){} @Get() list(@Query('ids') ids?:string){return ids?this.service.compare(ids.split(',').filter(Boolean)):this.service.list();} @Get(':id') get(@Param('id') id:string){return this.service.get(id);} }

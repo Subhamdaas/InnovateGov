@@ -1,0 +1,3 @@
+import { Body, Controller, Get, Post } from '@nestjs/common'; import { IsObject, IsOptional, IsString } from 'class-validator'; import { EvaluationsService } from './evaluations.service';
+class EvalDto { @IsString() challengeId!:string; @IsString() startupId!:string; @IsString() evaluatorId!:string; @IsObject() scores!:Record<string,{weight:number;score:number}>; @IsOptional() @IsString() comment?:string; @IsOptional() @IsString() status?:'DRAFT'|'SUBMITTED'; }
+@Controller('evaluations') export class EvaluationsController { constructor(private s:EvaluationsService){} @Get() list(){return this.s.list();} @Post() submit(@Body() dto:EvalDto){return this.s.submit(dto);} }

@@ -1,0 +1,2 @@
+import { Controller, Get, Param } from '@nestjs/common'; import { AiService } from './ai.service';
+@Controller('ai') export class AiController { constructor(private s:AiService){} @Get('recommendations/:challengeId') recommend(@Param('challengeId') id:string){return this.s.recommend(id);} @Get('pilot/:pilotId/recommendation') pilot(@Param('pilotId') id:string){return this.s.pilotRecommendation(id);} }
