@@ -81,21 +81,12 @@ export default function ForStartupsPage() {
           {/* Brand Logo & Tagline */}
           <div className="flex items-center gap-3">
             <Link href="/for-startups" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#2F5FEA] to-indigo-400 flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="font-extrabold text-lg tracking-tight text-white">
-                    InnovateGov
-                  </h1>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    Startup Portal
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-300 font-medium">
-                  Public Sector Innovation Bridge
-                </p>
+              <div className="bg-white rounded-xl p-1.5 px-3 shadow-md group-hover:scale-105 transition-transform">
+                <img
+                  src="/govinn-logo.png"
+                  alt="GOVINN — Government Innovation Procurement Platform"
+                  className="h-8 w-auto object-contain"
+                />
               </div>
             </Link>
           </div>

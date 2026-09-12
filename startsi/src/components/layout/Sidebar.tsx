@@ -95,20 +95,17 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
     <div className="w-64 bg-[#16224B] text-white flex flex-col justify-between h-full select-none overflow-y-auto">
       {/* Brand Header */}
       <div>
-        <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#2F5FEA] to-indigo-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="font-bold text-base tracking-tight leading-snug">
-                InnovateGov
-              </h1>
-              <p className="text-[11px] text-slate-400 font-medium">
-                Procurement Dashboard
-              </p>
-            </div>
-          </div>
+        <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
+          <Link
+            href={currentUser?.role === "STARTUP" ? "/startup/dashboard" : "/dashboard"}
+            className="flex items-center bg-white rounded-xl p-2 px-3 shadow-md hover:opacity-95 transition-all overflow-hidden flex-1 max-w-[210px]"
+          >
+            <img
+              src="/govinn-logo.png"
+              alt="GOVINN — Government Innovation Procurement Platform"
+              className="h-10 w-full object-contain"
+            />
+          </Link>
 
           {/* Close button for mobile drawer */}
           {onMobileClose && (

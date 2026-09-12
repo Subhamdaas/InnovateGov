@@ -214,16 +214,12 @@ function LoginForm() {
 
         {/* Top Header Logo */}
         <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#2F5FEA] to-indigo-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="font-bold text-xl tracking-tight text-white">InnovateGov</h1>
-              <p className="text-[11px] text-slate-400 font-medium tracking-wide">
-                Government · Startups · Better Tomorrow
-              </p>
-            </div>
+          <div className="bg-white rounded-xl p-2 px-3 shadow-md">
+            <img
+              src="/govinn-logo.png"
+              alt="GOVINN — Government Innovation Procurement Platform"
+              className="h-9 w-auto object-contain"
+            />
           </div>
 
           <div className="flex items-center gap-2">
