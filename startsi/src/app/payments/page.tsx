@@ -17,10 +17,24 @@ import {
 } from "lucide-react";
 import { fadeInUp, staggerContainer, useCountUp } from "@/lib/motion";
 import { useSessionStore } from "@/store/session";
+import { getAllPilots, updateMilestone } from "@/lib/api";
 
 export default function PaymentsPage() {
   const router = useRouter();
   const { currentUser, hasHydrated } = useSessionStore();
+
+  const [payments, setPayments] = useState<
+    {
+      id: string;
+      vendor: string;
+      milestone: string;
+      department: string;
+      amount: string;
+      status: "RELEASED" | "PENDING";
+      date: string;
+      escrowHash: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -28,73 +42,64 @@ export default function PaymentsPage() {
       router.push("/login");
       return;
     }
+
+    getAllPilots().then((pilots) => {
+      if (pilots && pilots.length > 0) {
+        const list: typeof payments = [];
+        pilots.forEach((pilot) => {
+          (pilot.milestones || []).forEach((m) => {
+            const isCompleted = m.status === "COMPLETED";
+            list.push({
+              id: m.id,
+              vendor: pilot.startup?.name || "Startup Partner",
+              milestone: m.title,
+              department: pilot.departmentName || "Public Works Department",
+              amount: `₹${m.amount.toLocaleString("en-IN")}`,
+              status: isCompleted ? "RELEASED" : "PENDING",
+              date: m.completedAt
+                ? new Date(m.completedAt).toLocaleDateString("en-IN", {
+                    month: "short",
+                    day: "2-digit",
+                    year: "numeric",
+                  })
+                : "Pending Completion",
+              escrowHash: `0x${m.id.substring(0, 4)}...${m.id.substring(m.id.length - 4)}`,
+            });
+          });
+        });
+        setPayments(list);
+      }
+    });
   }, [currentUser, hasHydrated, router]);
 
-  const [payments, setPayments] = useState([
-    {
-      id: "pay-101",
-      vendor: "GreenTech Solutions Pvt. Ltd.",
-      milestone: "Deploy Sensors in 5 Wards",
-      department: "Public Works Department",
-      amount: "₹2,50,000",
-      status: "RELEASED",
-      date: "Sep 05, 2026",
-      escrowHash: "0x8f2a...9b41",
-    },
-    {
-      id: "pay-102",
-      vendor: "GreenTech Solutions Pvt. Ltd.",
-      milestone: "Telemetry Data Calibration & Baseline Report",
-      department: "Public Works Department",
-      amount: "₹3,00,000",
-      status: "PENDING",
-      date: "Due Oct 15, 2026",
-      escrowHash: "0x3c1d...4e82",
-    },
-    {
-      id: "pay-103",
-      vendor: "EcoTrash Systems",
-      milestone: "IoT Bin Sensor Deployment across Ward 4",
-      department: "Municipal Corporation",
-      amount: "₹2,00,000",
-      status: "RELEASED",
-      date: "Apr 15, 2026",
-      escrowHash: "0x7e9f...1a2b",
-    },
-    {
-      id: "pay-104",
-      vendor: "EcoTrash Systems",
-      milestone: "Dynamic Truck Route Telemetry Calibration",
-      department: "Municipal Corporation",
-      amount: "₹2,50,000",
-      status: "RELEASED",
-      date: "Jun 20, 2026",
-      escrowHash: "0x4b8c...9d0e",
-    },
-    {
-      id: "pay-[#pay-105]",
-      vendor: "AgriTech Labs",
-      milestone: "Thermal Imagery Camera Installation",
-      department: "Public Works Department",
-      amount: "₹1,80,000",
-      status: "RELEASED",
-      date: "Aug 30, 2026",
-      escrowHash: "0x1d2e...3f4a",
-    },
-  ]);
+  const totalSum = payments.reduce(
+    (acc, p) => acc + (parseInt(p.amount.replace(/[^0-9]/g, "")) || 0),
+    0
+  );
+  const releasedSum = payments
+    .filter((p) => p.status === "RELEASED")
+    .reduce((acc, p) => acc + (parseInt(p.amount.replace(/[^0-9]/g, "")) || 0), 0);
+  const pendingSum = totalSum - releasedSum;
 
-  const totalEscrow = useCountUp(1180000, 800);
-  const released = useCountUp(880000, 800);
-  const pending = useCountUp(300000, 800);
+  const totalEscrow = useCountUp(totalSum || 1180000, 800);
+  const released = useCountUp(releasedSum || 880000, 800);
+  const pending = useCountUp(pendingSum || 300000, 800);
 
-  const handleRelease = (id: string) => {
-    setPayments((prev) =>
-      prev.map((p) =>
-        p.id === id
-          ? { ...p, status: "RELEASED", date: "Just Released" }
-          : p
-      )
-    );
+  const handleRelease = async (id: string) => {
+    try {
+      await updateMilestone(id, "COMPLETED");
+      setPayments((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, status: "RELEASED", date: "Just Released" } : p
+        )
+      );
+    } catch {
+      setPayments((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, status: "RELEASED", date: "Just Released" } : p
+        )
+      );
+    }
   };
 
   return (

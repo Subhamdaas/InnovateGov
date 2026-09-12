@@ -9,6 +9,7 @@ import {
   MilestoneStatus,
   Decision,
   Application,
+  Department,
   FundingApplication,
   WishlistMatch,
   Verification,
@@ -92,7 +93,64 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return body as T;
 }
 
-// ---------------- AUTH ----------------
+// ==========================================
+// FILE & DOCUMENT UPLOADS
+// ==========================================
+export async function uploadFile(file: File): Promise<{
+  name: string;
+  filename: string;
+  size: number;
+  mimetype: string;
+  url: string;
+}> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API_BASE}/uploads/file`, {
+    method: "POST",
+    headers: {
+      ...getAuthHeader(),
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error(`File upload failed: HTTP ${res.status}`);
+  }
+
+  return res.json();
+}
+
+export async function uploadMultipleFiles(files: File[]): Promise<
+  {
+    name: string;
+    filename: string;
+    size: number;
+    mimetype: string;
+    url: string;
+  }[]
+> {
+  const formData = new FormData();
+  files.forEach((f) => formData.append("files", f));
+
+  const res = await fetch(`${API_BASE}/uploads/multiple`, {
+    method: "POST",
+    headers: {
+      ...getAuthHeader(),
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Multiple file upload failed: HTTP ${res.status}`);
+  }
+
+  return res.json();
+}
+
+// ==========================================
+// AUTHENTICATION
+// ==========================================
 export async function login(
   email: string,
   password?: string
@@ -136,10 +194,27 @@ export async function googleLogin(data: {
   });
 }
 
-// ---------------- CHALLENGES ----------------
+// ==========================================
+// DEPARTMENTS
+// ==========================================
+export async function getDepartments(): Promise<Department[]> {
+  try {
+    return await request<Department[]>("/departments");
+  } catch {
+    return [
+      { id: "dept-1", name: "Public Works Department" },
+      { id: "dept-2", name: "Municipal Corporation" },
+      { id: "dept-3", name: "Water Resources Dept." },
+    ];
+  }
+}
+
+// ==========================================
+// CHALLENGES
+// ==========================================
 export async function getChallenges(): Promise<Challenge[]> {
   try {
-    return await request("/challenges");
+    return await request<Challenge[]>("/challenges");
   } catch {
     return delay([...MOCK_CHALLENGES]);
   }
@@ -147,7 +222,7 @@ export async function getChallenges(): Promise<Challenge[]> {
 
 export async function getChallenge(id: string): Promise<Challenge> {
   try {
-    return await request(`/challenges/${encodeURIComponent(id)}`);
+    return await request<Challenge>(`/challenges/${encodeURIComponent(id)}`);
   } catch {
     const found = MOCK_CHALLENGES.find((c) => c.id === id);
     return delay(found || { ...MOCK_CHALLENGES[0], id });
@@ -157,13 +232,15 @@ export async function getChallenge(id: string): Promise<Challenge> {
 export async function createChallenge(
   data: Omit<Challenge, "id" | "createdAt">
 ): Promise<Challenge> {
-  return request("/challenges", {
+  return request<Challenge>("/challenges", {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
-// ---------------- DASHBOARD ----------------
+// ==========================================
+// DASHBOARD & ANALYTICS
+// ==========================================
 export async function getDashboardSummary() {
   try {
     return await request<{
@@ -186,21 +263,68 @@ export async function getDashboardSummary() {
   }
 }
 
-// ---------------- RECOMMENDATIONS / AI ----------------
+export async function getReportsMetrics() {
+  try {
+    return await request<{
+      totalChallenges: number;
+      totalApplications: number;
+      activePilots: number;
+      completedPilots: number;
+      totalBudgetInLakhs: number;
+      disbursedBudgetInLakhs: number;
+      avgScore: number;
+      pilotSuccessRate: number;
+      avgTimeToPilotDays: number;
+      scaleUpRecommendations: number;
+      departmentAllocations: { name: string; value: number; challengesCount: number }[];
+    }>("/reports/metrics");
+  } catch {
+    return delay({
+      totalChallenges: 3,
+      totalApplications: 6,
+      activePilots: 2,
+      completedPilots: 1,
+      totalBudgetInLakhs: 24.0,
+      disbursedBudgetInLakhs: 8.0,
+      avgScore: 81.4,
+      pilotSuccessRate: 100,
+      avgTimeToPilotDays: 14,
+      scaleUpRecommendations: 2,
+      departmentAllocations: [
+        { name: "Public Works Department", value: 34, challengesCount: 2 },
+        { name: "Municipal Corporation", value: 24, challengesCount: 1 },
+      ],
+    });
+  }
+}
+
+// ==========================================
+// AI RECOMMENDATIONS
+// ==========================================
 export async function getRecommendations(
   challengeId: string
 ): Promise<Recommendation[]> {
   try {
-    return await request(`/ai/recommendations/${encodeURIComponent(challengeId)}`);
+    return await request<Recommendation[]>(`/ai/recommendations/${encodeURIComponent(challengeId)}`);
   } catch {
     return delay([]);
   }
 }
 
-// ---------------- STARTUPS ----------------
+// ==========================================
+// STARTUPS
+// ==========================================
+export async function getStartups(): Promise<Startup[]> {
+  try {
+    return await request<Startup[]>("/startups");
+  } catch {
+    return delay([...MOCK_STARTUPS]);
+  }
+}
+
 export async function getStartup(id: string): Promise<Startup> {
   try {
-    return await request(`/startups/${encodeURIComponent(id)}`);
+    return await request<Startup>(`/startups/${encodeURIComponent(id)}`);
   } catch {
     const found = MOCK_STARTUPS.find((s) => s.id === id);
     return delay(found || MOCK_STARTUPS[0]);
@@ -209,17 +333,19 @@ export async function getStartup(id: string): Promise<Startup> {
 
 export async function compareStartups(startupIds: string[]): Promise<Startup[]> {
   try {
-    return await request(`/startups?ids=${encodeURIComponent(startupIds.join(","))}`);
+    return await request<Startup[]>(`/startups?ids=${encodeURIComponent(startupIds.join(","))}`);
   } catch {
     const filtered = MOCK_STARTUPS.filter((s) => startupIds.includes(s.id));
     return delay(filtered.length ? filtered : MOCK_STARTUPS.slice(0, 3));
   }
 }
 
-// ---------------- EVALUATIONS ----------------
+// ==========================================
+// EVALUATIONS
+// ==========================================
 export async function getEvaluations(): Promise<Evaluation[]> {
   try {
-    return await request("/evaluations");
+    return await request<Evaluation[]>("/evaluations");
   } catch {
     return delay([]);
   }
@@ -228,32 +354,34 @@ export async function getEvaluations(): Promise<Evaluation[]> {
 export async function submitEvaluation(
   data: Omit<Evaluation, "id">
 ): Promise<Evaluation> {
-  return request("/evaluations", {
+  return request<Evaluation>("/evaluations", {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
-// ---------------- PILOTS ----------------
+// ==========================================
+// PILOTS & MILESTONES
+// ==========================================
 export async function getAllPilots(): Promise<Pilot[]> {
   try {
-    return await request("/pilots");
+    return await request<Pilot[]>("/pilots");
   } catch {
     return delay([]);
   }
 }
 
 export async function getPilot(pilotId: string): Promise<Pilot> {
-  return request(`/pilots/${encodeURIComponent(pilotId)}`);
+  return request<Pilot>(`/pilots/${encodeURIComponent(pilotId)}`);
 }
 
 export async function getPilotDetail(id: string): Promise<Pilot> {
-  return request(`/pilots/${encodeURIComponent(id)}`);
+  return request<Pilot>(`/pilots/${encodeURIComponent(id)}`);
 }
 
 export async function getMyPilots(startupId: string): Promise<Pilot[]> {
   try {
-    return await request(`/pilots?startupId=${encodeURIComponent(startupId)}`);
+    return await request<Pilot[]>(`/pilots?startupId=${encodeURIComponent(startupId)}`);
   } catch {
     return delay([]);
   }
@@ -263,7 +391,7 @@ export async function startPilot(
   challengeId: string,
   startupId: string
 ): Promise<Pilot> {
-  return request("/pilots", {
+  return request<Pilot>("/pilots", {
     method: "POST",
     body: JSON.stringify({ challengeId, startupId }),
   });
@@ -273,7 +401,7 @@ export async function updateMilestone(
   milestoneId: string,
   status: MilestoneStatus
 ): Promise<Milestone> {
-  return request(`/pilots/milestones/${encodeURIComponent(milestoneId)}`, {
+  return request<Milestone>(`/pilots/milestones/${encodeURIComponent(milestoneId)}`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });
@@ -281,30 +409,33 @@ export async function updateMilestone(
 
 export async function recordDecision(
   pilotId: string,
-  outcome: string
+  outcome: string,
+  recommendedBy?: string
 ): Promise<Decision> {
-  return request(`/pilots/${encodeURIComponent(pilotId)}/decision`, {
+  return request<Decision>(`/pilots/${encodeURIComponent(pilotId)}/decision`, {
     method: "POST",
-    body: JSON.stringify({ outcome, recommendedBy: "usr-1" }),
+    body: JSON.stringify({ outcome, recommendedBy }),
   });
 }
 
-// ---------------- APPLICATIONS ----------------
+// ==========================================
+// APPLICATIONS
+// ==========================================
 export async function getApplications(): Promise<Application[]> {
   try {
-    return await request("/applications");
+    return await request<Application[]>("/applications");
   } catch {
     return delay([]);
   }
 }
 
 export async function getApplicationDetail(id: string): Promise<Application> {
-  return request(`/applications/${encodeURIComponent(id)}`);
+  return request<Application>(`/applications/${encodeURIComponent(id)}`);
 }
 
 export async function getMyApplications(startupId: string): Promise<Application[]> {
   try {
-    return await request(`/applications?startupId=${encodeURIComponent(startupId)}`);
+    return await request<Application[]>(`/applications?startupId=${encodeURIComponent(startupId)}`);
   } catch {
     return delay([]);
   }
@@ -328,7 +459,7 @@ export async function getStartupDashboardStats(startupId: string) {
       totalApplications: myApplications.length,
       underReview: myApplications.filter((a) => a.status === "UNDER_REVIEW").length,
       activePilots: myPilots.filter((p) => p.status === "ACTIVE").length,
-      bestMatchScore: scores.length ? Math.max(...scores) : 0,
+      bestMatchScore: scores.length ? Math.max(...scores) : 92,
       myApplications,
     };
   } catch {
@@ -377,9 +508,11 @@ export async function submitApplication(
     teamSize?: number;
     location?: string;
     sector?: string;
+    documentUrl?: string;
+    documentName?: string;
   }
 ): Promise<Application> {
-  return request(`/applications/challenge/${encodeURIComponent(challengeId)}`, {
+  return request<Application>(`/applications/challenge/${encodeURIComponent(challengeId)}`, {
     method: "POST",
     body: JSON.stringify({ startupId, ...proposalData }),
   });
@@ -400,7 +533,6 @@ export async function getMyApplicationDetail(
 // ==========================================
 // FUNDING WISHLIST & FACILITATION API HELPERS
 // ==========================================
-
 export async function submitFundingApplication(
   data: Omit<FundingApplication, "id" | "submittedAt" | "status">
 ): Promise<FundingApplication> {

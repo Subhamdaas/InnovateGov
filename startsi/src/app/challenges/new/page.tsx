@@ -17,10 +17,9 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useSessionStore } from "@/store/session";
-import { createChallenge } from "@/lib/api";
-import { MOCK_DEPARTMENTS } from "@/lib/mock-data";
+import { createChallenge, getDepartments } from "@/lib/api";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
-import { ChallengeStatus } from "@/types";
+import { ChallengeStatus, Department } from "@/types";
 
 interface FormErrors {
   title?: string;
@@ -33,16 +32,25 @@ export default function CreateChallengePage() {
   const router = useRouter();
   const { currentUser, hasHydrated } = useSessionStore();
 
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [title, setTitle] = useState<string>("");
-  const [departmentId, setDepartmentId] = useState<string>(
-    MOCK_DEPARTMENTS[0]?.id || ""
-  );
+  const [departmentId, setDepartmentId] = useState<string>("");
   const [problemStatement, setProblemStatement] = useState<string>("");
   const [expectedOutcome, setExpectedOutcome] = useState<string>("");
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
+
+  // Load real departments from backend database
+  useEffect(() => {
+    getDepartments().then((depts) => {
+      if (depts && depts.length > 0) {
+        setDepartments(depts);
+        setDepartmentId(depts[0].id);
+      }
+    });
+  }, []);
 
   // Session guard
   useEffect(() => {
@@ -232,7 +240,7 @@ export default function CreateChallengePage() {
                   : "border-slate-200 focus:border-[#2F5FEA]"
               }`}
             >
-              {MOCK_DEPARTMENTS.map((dept) => (
+              {departments.map((dept) => (
                 <option key={dept.id} value={dept.id}>
                   {dept.name}
                 </option>
