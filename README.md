@@ -4,7 +4,7 @@
 
 ---
 
-## 🏛️ System Architecture
+##  System Architecture
 
 - **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS, Framer Motion, Zustand, Lucide Icons.
 - **Backend**: NestJS, Node.js, Prisma ORM, Class Validator, Cryptographic Scrypt password derivation & JWT Auth.
@@ -16,7 +16,7 @@
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 SIH_PROJECT/
@@ -39,7 +39,7 @@ SIH_PROJECT/
 
 ---
 
-## 🚀 Quickstart Guide
+## start Guide
 
 ### 1. Backend Setup
 
@@ -80,16 +80,3 @@ cp .env.example .env.local
 # Start the Next.js Frontend (Port 3000)
 npm run dev
 ```
-
-Visit **http://localhost:3000** to access the InnovateGov platform.
-
----
-
-## 🔑 Demo Accounts (Pre-Seeded)
-
-| Role | Email | Password |
-|---|---|---|
-| **Government Officer** | `amit.sharma@gov.in` | `Password123!` |
-| **Startup Founder** | `priya.nair@aerobotics.in` | `Password123!` |
-| **Evaluator** | `vikram.sen@iitd.ac.in` | `Password123!` |
-| **Google Sign-In** | One-click via `SUBHAM DAS` or any account | Google Auth |

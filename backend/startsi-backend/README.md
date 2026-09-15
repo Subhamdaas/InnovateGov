@@ -1,4 +1,4 @@
-# StartSI Backend — 1-day prototype
+# StartSI 
 
 Backend for the existing StartSI frontend. It replaces the frontend's in-memory mock API with NestJS + Prisma + PostgreSQL.
 
