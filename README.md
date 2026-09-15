@@ -80,16 +80,3 @@ cp .env.example .env.local
 # Start the Next.js Frontend (Port 3000)
 npm run dev
 ```
-
-Visit **http://localhost:3000** to access the InnovateGov platform.
-
----
-
-##  Demo Accounts (Pre-Seeded)
-
-| Role | Email | Password |
-|---|---|---|
-| **Government Officer** | `amit.sharma@gov.in` | `Password123!` |
-| **Startup Founder** | `priya.nair@aerobotics.in` | `Password123!` |
-| **Evaluator** | `vikram.sen@iitd.ac.in` | `Password123!` |
-| **Google Sign-In** | One-click via `SUBHAM DAS` or any account | Google Auth |
